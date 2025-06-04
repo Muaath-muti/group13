@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://rfprfq.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_2c478b8ca55d4b01840306b48adaeb47 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_f614f94252e841e2b54ba906621dc7a6 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_9f0299fd978e401a9ed97b79e97893b7 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_5269c31d20bc4bdfbd123b0062d6d6a9 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: rfprfq.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_2c478b8ca55d4b01840306b48adaeb47 }}/https:${{ github.sha }}
+        tags: rfprfq.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_9f0299fd978e401a9ed97b79e97893b7 }}/Python:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'Document-Assist2'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_4694111e39fb4f25812a1bb3a80c6ee1 }}
-        images: 'rfprfq.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_2c478b8ca55d4b01840306b48adaeb47 }}/https:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_7d4994d86d5940e3b405d237cfc98440 }}
+        images: 'rfprfq.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_9f0299fd978e401a9ed97b79e97893b7 }}/Python:${{ github.sha }}'
