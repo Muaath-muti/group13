@@ -1,0 +1,35 @@
+from flask import Flask, request, jsonify
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+import os
+
+app = Flask(__name__)
+
+# Azure Blob Storage connection string and container name
+AZURE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
+CONTAINER_NAME = "your-container-name"  # replace with your container name
+
+blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
+container_client = blob_service_client.get_container_client(CONTAINER_NAME)
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part in the request"}), 400
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    try:
+        # Upload file to Azure Blob Storage
+        blob_client = container_client.get_blob_client(file.filename)
+        blob_client.upload_blob(file, overwrite=True)
+
+        return jsonify({"message": f"File '{file.filename}' uploaded successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)
